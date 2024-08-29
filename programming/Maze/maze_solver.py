@@ -24,15 +24,27 @@ def receive_maze(host='localhost', port=9999):
             print(f"Error connecting to the server: {e}")
             return None
 
+import numpy as np
+
+def is_valid_maze_line(line):
+    """Determines if a line is a valid part of the maze (contains only maze characters)."""
+    return all(char in ' #SE#' for char in line)
+
 def ascii_to_maze(ascii_maze):
     """Converts ASCII maze representation to a Maze object."""
     grid = []
     start = None
     end = None
 
-    max_width = max(len(line) for line in ascii_maze)  # Find the maximum width
+    # Filter valid maze lines
+    filtered_lines = [line for line in ascii_maze if is_valid_maze_line(line)]
 
-    for y, line in enumerate(ascii_maze):
+    if not filtered_lines:
+        raise ValueError("No valid maze lines found")
+
+    max_width = max(len(line) for line in filtered_lines)  # Find the maximum width
+    
+    for y, line in enumerate(filtered_lines):
         if len(line) != max_width:
             raise ValueError("Inconsistent row lengths in the maze")
         row = []
@@ -55,6 +67,7 @@ def ascii_to_maze(ascii_maze):
         raise ValueError("Start or End position not found in the maze")
 
     return grid_array, start, end
+
 
 def solve_maze(maze_ascii):
     """Solves the maze using BacktrackingSolver and prints both the original and solved maze."""

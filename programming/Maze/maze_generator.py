@@ -6,8 +6,8 @@ from mazelib import Maze
 from mazelib.generate.Prims import Prims
 from mazelib.solve.BacktrackingSolver import BacktrackingSolver
 
-MAZE_HEIGHT = 5
-MAZE_WIDTH = 10
+MAZE_HEIGHT = 10
+MAZE_WIDTH = 20
 
 def generate_maze(width, height):
     """Generates a new maze using the Prims algorithm."""
@@ -33,6 +33,55 @@ def maze_to_ascii(m):
         maze_str += '\n'
     return maze_str
 
+def calculate_solution(maze):
+    """Calculates the solution path for the given maze."""
+    maze.solver = BacktrackingSolver()
+    solution = maze.solve()
+    
+    # Convert solution path to ASCII representation
+    solution_str = ""
+    solution_set = set(solution)
+    for y, row in enumerate(maze.grid):
+        for x, cell in enumerate(row):
+            if (y, x) == maze.start:
+                solution_str += 'S'
+            elif (y, x) == maze.end:
+                solution_str += 'E'
+            elif (y, x) in solution_set:
+                solution_str += '.'
+            elif cell == 1:
+                solution_str += '#'
+            else:
+                solution_str += ' '
+        solution_str += '\n'
+    
+    return solution_str
+
+def handle_client(client_socket):
+    """Handles a client connection by sending a maze and waiting for a solution response."""
+    maze = generate_maze(MAZE_HEIGHT, MAZE_WIDTH)  # Generate a new maze
+    print(maze)
+    maze_ascii = maze_to_ascii(maze)  # Convert the maze to ASCII
+    
+    # Send the maze to the client
+    client_socket.sendall(maze_ascii.encode('utf-8'))
+    client_socket.sendall(b"\n3,2,1 solve it!\n")
+
+    # Set a timeout for the response
+    client_socket.settimeout(2.0)  # 2 seconds timeout
+    
+    try:
+        response = client_socket.recv(4096).decode('utf-8').strip()
+        solution_str = calculate_solution(maze).strip()
+        if response == solution_str:
+            client_socket.sendall(b"CONGRATULATIONS THIS IS YOUR FLAG\n")
+        else:
+            client_socket.sendall(b"Incorrect solution. Try again.\n")
+    except socket.timeout:
+        client_socket.sendall(b"Too slow!\n")
+    
+    client_socket.close()
+
 def serve_maze(host='0.0.0.0', port=9999):
     """Sets up a TCP server that sends a newly generated maze to each connected client."""
     def signal_handler(sig, frame):
@@ -49,16 +98,8 @@ def serve_maze(host='0.0.0.0', port=9999):
         while True:
             try:
                 client_socket, addr = server_socket.accept()
-                with client_socket:
-                    print(f"Connected by {addr}")
-                    
-                    # Generate a new maze for each client connection
-                    maze = generate_maze(MAZE_HEIGHT, MAZE_WIDTH)  # You can adjust the maze size here
-                    maze_ascii = maze_to_ascii(maze)
-                    
-                    # Send the maze to the client
-                    client_socket.sendall(maze_ascii.encode('utf-8'))
-                    client_socket.sendall(b"\nMaze sent. Connection will be closed.\n")
+                print(f"Connected by {addr}")
+                handle_client(client_socket)
             except KeyboardInterrupt:
                 print("\nServer interrupted by user. Shutting down.")
                 break
