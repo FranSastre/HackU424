@@ -34,13 +34,13 @@ def maze_to_ascii(m):
     return maze_str
 
 def calculate_solution(maze):
-    """Calculates the solution path for the given maze."""
+    """Calculates the solution path for the given maze and converts it to an ASCII representation."""
     maze.solver = BacktrackingSolver()
-    solution = maze.solve()
+    maze.solve()  # Compute the solution
     
     # Convert solution path to ASCII representation
     solution_str = ""
-    solution_set = set(solution)
+    solution_set = set(maze.solution)  # Assuming maze.solution holds the path
     for y, row in enumerate(maze.grid):
         for x, cell in enumerate(row):
             if (y, x) == maze.start:
@@ -55,12 +55,23 @@ def calculate_solution(maze):
                 solution_str += ' '
         solution_str += '\n'
     
-    return solution_str
+    return solution_str.strip()
+
+def receive_full_response(client_socket):
+    """Receives all data from the socket until the connection is closed."""
+    response = b''
+    while True:
+        part = client_socket.recv(4096)
+        if not part:
+            break
+        response += part
+    return response.decode('utf-8').strip()
 
 def handle_client(client_socket):
     """Handles a client connection by sending a maze and waiting for a solution response."""
     maze = generate_maze(MAZE_HEIGHT, MAZE_WIDTH)  # Generate a new maze
-    print(maze)
+    print("Generated Maze:")
+    print(maze_to_ascii(maze))  # Print the generated maze
     maze_ascii = maze_to_ascii(maze)  # Convert the maze to ASCII
     
     # Send the maze to the client
@@ -68,19 +79,31 @@ def handle_client(client_socket):
     client_socket.sendall(b"\n3,2,1 solve it!\n")
 
     # Set a timeout for the response
-    client_socket.settimeout(2.0)  # 2 seconds timeout
+    client_socket.settimeout(1.0)  # 2 seconds timeout
     
     try:
-        response = client_socket.recv(4096).decode('utf-8').strip()
-        solution_str = calculate_solution(maze).strip()
+        # Receive the solution from the client
+        response = receive_full_response(client_socket)
+        print("Received Response:")
+        print(response)  # Print the response received from the client
+        
+        solution_str = calculate_solution(maze)
+        print("Calculated Solution:")
+        print(solution_str)  # Print the calculated solution
+
         if response == solution_str:
             client_socket.sendall(b"CONGRATULATIONS THIS IS YOUR FLAG\n")
         else:
             client_socket.sendall(b"Incorrect solution. Try again.\n")
     except socket.timeout:
         client_socket.sendall(b"Too slow!\n")
-    
-    client_socket.close()
+    except Exception as e:
+        print(f"Exception: {e}")
+        client_socket.sendall(b"Something went wrong\n")
+
+    finally:
+        client_socket.close()
+
 
 def serve_maze(host='0.0.0.0', port=9999):
     """Sets up a TCP server that sends a newly generated maze to each connected client."""
