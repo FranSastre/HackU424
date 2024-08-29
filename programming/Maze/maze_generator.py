@@ -6,8 +6,8 @@ from mazelib import Maze
 from mazelib.generate.Prims import Prims
 from mazelib.solve.BacktrackingSolver import BacktrackingSolver
 
-MAZE_WIDTH = 3
-MAZE_HEIGHT = 3
+MAZE_HEIGHT = 5
+MAZE_WIDTH = 10
 
 def generate_maze(width, height):
     """Generates a new maze using the Prims algorithm."""
@@ -53,7 +53,7 @@ def serve_maze(host='0.0.0.0', port=9999):
                     print(f"Connected by {addr}")
                     
                     # Generate a new maze for each client connection
-                    maze = generate_maze(MAZE_WIDTH, MAZE_HEIGHT)  # You can adjust the maze size here
+                    maze = generate_maze(MAZE_HEIGHT, MAZE_WIDTH)  # You can adjust the maze size here
                     maze_ascii = maze_to_ascii(maze)
                     
                     # Send the maze to the client
