@@ -3,31 +3,44 @@ import numpy as np
 from mazelib import Maze
 from mazelib.solve.BacktrackingSolver import BacktrackingSolver
 
-def receive_maze_and_send_solution(host='localhost', port=9999):
+def receive_maze_and_send_solution(host='localhost', port=9998):
     """Connects to the server, receives the maze, solves it, and sends the solution back."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
         try:
+            # Connect to the server
             client_socket.connect((host, port))
-            
+
             # Receive the maze from the server
-            data = b''
+            maze_data = b''
             while True:
                 part = client_socket.recv(4096)
+                print(part)
                 if not part:
                     break
-                data += part
-            maze_lines = data.decode('utf-8').strip().splitlines()
-            
+                maze_data += part
+
+            # Decode the maze data
+            maze_lines = maze_data.decode('utf-8').strip().splitlines()
+
             # Filter out non-maze lines
             maze_lines = [line for line in maze_lines if line.strip() and not line.startswith('Maze sent')]
 
             # Solve the maze
             solution = solve_maze(maze_lines)
 
-            # Send the solution as a string
-            solution_str = convert_solution_to_string(solution)
-            client_socket.sendall(solution_str.encode('utf-8'))
-            
+            # Convert the solution to string and add \r\n at the end of each line
+            solution_str = solution.tostring(True, True)  # Use maze.tostring() format
+            solution_with_crlf = '\r\n'.join(solution_str.splitlines()) + '\r\n'
+            print("SENDING> ")
+            print(solution_with_crlf)
+    
+            client_socket.sendall(solution_with_crlf.encode('utf-8'))
+            response = client_socket.recv(4096)
+
+            for line in solution_with_crlf: 
+                print(line)
+                client_socket.sendall(line.encode('utf-8'))
+
             # Receive and print the response from the server
             response = b''
             while True:
@@ -36,7 +49,7 @@ def receive_maze_and_send_solution(host='localhost', port=9999):
                     break
                 response += part
             print("Server Response:", response.decode('utf-8'))
-            
+
         except ConnectionError as e:
             print(f"Error connecting to the server: {e}")
         except Exception as e:
@@ -85,7 +98,7 @@ def ascii_to_maze(ascii_maze):
     return grid_array, start, end
 
 def solve_maze(maze_ascii):
-    """Solves the maze using BacktrackingSolver and returns the solution as a list of coordinates."""
+    """Solves the maze using BacktrackingSolver and returns the solution as a Maze object."""
     grid_array, start, end = ascii_to_maze(maze_ascii)
 
     maze = Maze()
@@ -103,19 +116,7 @@ def solve_maze(maze_ascii):
     print("\n\nMAZE SOLUTION....")
     print(maze)
 
-    # Return the solution as a list of coordinates
-    # Ensure to handle possible formats of the solution
-    if isinstance(maze.solutions, list):
-        return maze.solutions
-    else:
-        raise ValueError("Unexpected solution format")
-
-def convert_solution_to_string(solution):
-    """Converts a list of tuples into a string."""
-    # Flatten the list of tuples
-    flat_list = [f"{x},{y}" for (x, y) in [coord for sublist in solution for coord in sublist]]
-    # Join the list of strings with newline characters
-    return '\n'.join(flat_list)
+    return maze  # Return the maze object containing the solution as a string
 
 if __name__ == "__main__":
-    receive_maze_and_send_solution('localhost', 9999)
+    receive_maze_and_send_solution('localhost', 9998)
