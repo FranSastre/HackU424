@@ -1,87 +1,28 @@
-from mazelib import Maze 
-from mazelib.generate.Prims import Prims 
-from mazelib.solve.BacktrackingSolver import BacktrackingSolver 
-import numpy as np 
- 
-# Function to generate the maze 
-def generate_maze(width, height): 
-    m = Maze() 
-    m.generator = Prims(width, height) 
-    m.generate() 
-    m.generate_entrances() 
- 
-    print("\n\n GENERATED MAZE") 
-    print(m) 
-    solve_maze(m)
-    return m 
- 
-def solve_maze(m): 
-    m.solver = BacktrackingSolver()
-    m.solve() 
-    print("\n\nSolution") 
-    print(m) 
- 
- 
-def create_maze_from_ascii(ascii_maze): 
-    grid_array, start, end = ascii_to_maze(ascii_maze) 
-     
-    mazeAscii = Maze()
-    #mazeAscii.generate_entrances()
-    mazeAscii.grid = grid_array
-    mazeAscii.start = start
-    mazeAscii.end = end
+import socket
 
-    print("\n\nAAAAA")
-    print(mazeAscii)
+def send_test_message(message, server_host='127.0.0.1', server_port=9998):
+    """Envía un mensaje de prueba al servidor."""
+    try:
+        # Crear un socket TCP/IP
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
+            # Conectar al servidor
+            client_socket.connect((server_host, server_port))
+            print(f"Connected to server at {server_host}:{server_port}")
 
-    mazeAscii.solver = BacktrackingSolver()
-    mazeAscii.solve() 
+            # Enviar el mensaje codificado
+            client_socket.sendall(message.encode('utf-8'))
+            print(f"SENT> {message}")
 
-    print("\n\nBBBBBBB")
-    print(mazeAscii)
+            # Esperar y recibir la respuesta del servidor
+            response = client_socket.recv(4096)
+            print(f"RECEIVED> {response.decode('utf-8', errors='ignore')}")
 
-    return mazeAscii
- 
-def ascii_to_maze(ascii_maze): 
-    grid = [] 
-    start = None 
-    end = None 
- 
-    for y, line in enumerate(ascii_maze): 
-        row = [] 
-        for x, char in enumerate(line): 
-            if char == '#': 
-                row.append(1)  # Wall 
-            elif char == ' ': 
-                row.append(0)  # Path 
-            elif char == 'S': 
-                row.append(1)  # Path (entrance) 
-                start = (y, x) 
-            elif char == 'E': 
-                row.append(1)  # Path (exit) 
-                end = (y, x) 
-        grid.append(row) 
-     
-    grid_array = np.array(grid, dtype=np.int8) 
-     
-    if start is None or end is None: 
-        raise ValueError("Start or End position not found in the maze") 
-     
-    return grid_array, start, end 
- 
-if __name__ == "__main__": 
-    # Generate and print the maze 
-    maze = generate_maze(3, 3) 
- 
-    ascii_maze = [ 
-        "#E#####", 
-        "#     #", 
-        "# ### #", 
-        "#   # #", 
-        "##### #", 
-        "#     #", 
-        "###S###" 
-    ] 
-     
-    # Create Maze object from ASCII 
-    create_maze_from_ascii(ascii_maze)
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    # Ejemplos de mensajes para enviar
+    send_test_message("Hello, Server!")  # Mensaje simple
+    send_test_message("This is a second test message!")  # Mensaje más largo
+    send_test_message("1234567890" * 10)  # Mensaje más largo aún
+    send_test_message("Special characters AAAAAAAAAAAAAh")  # Mensaje con caracteres especiales
