@@ -16,9 +16,11 @@ MAZE_WIDTH = 3
 HOST = "0.0.0.0"
 PORT = 9999
 
+FLAG = "HACK4U{3zy_p1zy_m4z3}"
+
 
 def generate_maze(width, height):
-    """Generates a new maze using the Prims algorithmaze."""
+    """Generates a new maze using the Prims algorithm."""
     maze = Maze()
     maze.set_seed(123)
     maze.generator = Prims(width, height)
@@ -44,28 +46,36 @@ def serve_maze(maze, host=HOST, port=PORT):
         server_socket.listen()
         print(f"Listening on {host}:{port}")
 
-        client_socket, addr = server_socket.accept()
+        while True:
+            try:
+                client_socket, addr = server_socket.accept()
+                with client_socket:
+                    print(f"Connected by {addr}")
 
-        with client_socket:
-            print(f"Connected by {addr}")
+                    while True:
+                        try:
+                            print(f"SENDING>\n {maze.tostring(True, False)}")
+                            client_socket.sendall(maze.tostring(True, False).encode("utf-8"))
 
-            while True:
-                client_socket.sendall(maze)
-                data = client_socket.recv(4096)
+                            solution_received = client_socket.recv(4096).decode('utf-8', errors='ignore')
+                            print(f"RECEIVED>\n {solution_received}")
 
-                if not data:
-                    break
-                client_socket.sendall(data)
+                            if solution_received.replace("\n", "") == maze.tostring(True, True).replace("\n", ""):
+                                client_socket.sendall(FLAG.encode('utf-8'))
+                                break  # Exit the loop after successful response
 
-    
+                            else: 
+                                client_socket.sendall("WRONG! TRY AGAIN :)".encode('utf-8'))
+                        
+                        except Exception as e:
+                            print(f"Error during communication: {e}")
+                            break  # Exit the inner loop if there's an error
+
+            except Exception as e:
+                print(f"Error accepting connections: {e}")
 
 
 if __name__ == "__main__":
-    mazeString = generate_maze(MAZE_WIDTH, MAZE_HEIGHT)
 
-    serve_maze(mazeString.tostring(True, False))
-
-    print(mazeString.tostring(True, False))
-    print(mazeString.tostring(True, True))
-
-
+    maze = generate_maze(MAZE_WIDTH, MAZE_HEIGHT)
+    serve_maze(maze)
