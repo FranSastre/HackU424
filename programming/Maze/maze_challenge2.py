@@ -7,7 +7,7 @@ from mazelib.generate.Prims import Prims
 from mazelib.solve.BacktrackingSolver import BacktrackingSolver
 
 """ 
-EASY CHALLENGE - ALWAYS THE SAME MAZE TO RESOLVE
+CHALLENGE 2 - I send you the solution and you send me it back
 """
 
 MAZE_HEIGHT = 3
@@ -22,7 +22,6 @@ FLAG = "HACK4U{3zy_p1zy_m4z3}"
 def generate_maze(width, height):
     """Generates a new maze using the Prims algorithm."""
     maze = Maze()
-    maze.set_seed(123)
     maze.generator = Prims(width, height)
     maze.generate()
     maze.generate_entrances()
@@ -54,8 +53,10 @@ def serve_maze(maze, host=HOST, port=PORT):
 
                     while True:
                         try:
-                            print(f"SENDING>\n {maze.tostring(True, False)}")
+                            print(f"SENDING>\n{maze.tostring(True, False)}")
                             client_socket.sendall(maze.tostring(True, False).encode("utf-8"))
+                            print(f"SENDING>\n{maze.tostring(True, True)}")
+                            client_socket.sendall(maze.tostring(True, True).encode("utf-8"))
 
                             solution_received = client_socket.recv(4096).decode('utf-8', errors='ignore')
                             print(f"RECEIVED>\n {solution_received}")
