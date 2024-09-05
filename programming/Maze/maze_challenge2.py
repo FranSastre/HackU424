@@ -32,7 +32,7 @@ def generate_maze(width, height):
     return maze
 
 
-def serve_maze(maze, host=HOST, port=PORT):
+def serve_maze(host=HOST, port=PORT):
 
     def signal_handler(sig, frame):
         print("\nServer is shutting down.")
@@ -53,13 +53,15 @@ def serve_maze(maze, host=HOST, port=PORT):
 
                     while True:
                         try:
+                            maze = generate_maze(MAZE_WIDTH, MAZE_HEIGHT)
+
                             print(f"SENDING>\n{maze.tostring(True, False)}")
                             client_socket.sendall(maze.tostring(True, False).encode("utf-8"))
                             print(f"SENDING>\n{maze.tostring(True, True)}")
                             client_socket.sendall(maze.tostring(True, True).encode("utf-8"))
 
                             solution_received = client_socket.recv(4096).decode('utf-8', errors='ignore')
-                            print(f"RECEIVED>\n {solution_received}")
+                            print(f"RECEIVED>\n{solution_received}")
 
                             if solution_received.replace("\n", "") == maze.tostring(True, True).replace("\n", ""):
                                 client_socket.sendall(FLAG.encode('utf-8'))
@@ -77,6 +79,4 @@ def serve_maze(maze, host=HOST, port=PORT):
 
 
 if __name__ == "__main__":
-
-    maze = generate_maze(MAZE_WIDTH, MAZE_HEIGHT)
-    serve_maze(maze)
+    serve_maze()

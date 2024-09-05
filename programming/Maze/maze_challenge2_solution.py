@@ -1,6 +1,6 @@
 import socket
 
-def send_test_message(message, server_host='127.0.0.1', server_port=9999):
+def send_test_message(server_host='127.0.0.1', server_port=9999):
     """Envía un mensaje de prueba al servidor."""
     try:
         # Crear un socket TCP/IP
@@ -15,7 +15,7 @@ def send_test_message(message, server_host='127.0.0.1', server_port=9999):
             response = client_socket.recv(4096)
             print(f"RECEIVED>\n{response.decode('utf-8', errors='ignore')}")
 
-            print(f"SENT> {message}")
+            print(f"SENT>\n{response.decode('utf-8', errors='ignore')}")
             client_socket.sendall(response)
             response = client_socket.recv(4096)
             print(f"RECEIVED>\n {response.decode('utf-8', errors='ignore')}")
@@ -24,16 +24,5 @@ def send_test_message(message, server_host='127.0.0.1', server_port=9999):
         print(f"Error: {e}")
 
 if __name__ == "__main__":
-    # Ejemplos de mensajes para enviar
 
-    solucion = """
-#S#####
-#+++# #
-###+# #
-#  +# #
-###+# #
-#+++  #
-#E#####
-"""
-
-    send_test_message(solucion)  # Mensaje simple
+    send_test_message()  # Mensaje simple
