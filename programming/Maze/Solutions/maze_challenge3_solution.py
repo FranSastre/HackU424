@@ -22,8 +22,8 @@ def send_test_message(server_host='127.0.0.1', server_port=9999):
 
             solution = solve_maze(maze_lines)
 
-            print(f"SENT>\n{response.decode('utf-8', errors='ignore')}")
-            client_socket.sendall(response)
+            print(f"SENT>\n{solution.tostring(True, True)}")
+            client_socket.sendall(solution.tostring(True, True).encode("utf-8"))
             response = client_socket.recv(4096)
             print(f"RECEIVED>\n {response.decode('utf-8', errors='ignore')}")
 
