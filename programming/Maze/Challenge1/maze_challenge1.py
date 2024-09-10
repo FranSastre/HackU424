@@ -7,14 +7,14 @@ from mazelib.generate.Prims import Prims
 from mazelib.solve.BacktrackingSolver import BacktrackingSolver
 
 """ 
-CHALLENGE 2 - I send you the solution and you send me it back
+EASY CHALLENGE - ALWAYS THE SAME MAZE TO RESOLVE
 """
 
 MAZE_HEIGHT = 3
 MAZE_WIDTH = 3
 
 HOST = "0.0.0.0"
-PORT = 9999
+PORT = 9997
 
 FLAG = "HACK4U{3zy_p1zy_m4z3}"
 
@@ -22,6 +22,7 @@ FLAG = "HACK4U{3zy_p1zy_m4z3}"
 def generate_maze(width, height):
     """Generates a new maze using the Prims algorithm."""
     maze = Maze()
+    maze.set_seed(123)
     maze.generator = Prims(width, height)
     maze.generate()
     maze.generate_entrances()
@@ -32,7 +33,7 @@ def generate_maze(width, height):
     return maze
 
 
-def serve_maze(host=HOST, port=PORT):
+def serve_maze(maze, host=HOST, port=PORT):
 
     def signal_handler(sig, frame):
         print("\nServer is shutting down.")
@@ -53,15 +54,11 @@ def serve_maze(host=HOST, port=PORT):
 
                     while True:
                         try:
-                            maze = generate_maze(MAZE_WIDTH, MAZE_HEIGHT)
-
                             print(f"SENDING>\n{maze.tostring(True, False)}")
                             client_socket.sendall(maze.tostring(True, False).encode("utf-8"))
-                            print(f"SENDING>\n{maze.tostring(True, True)}")
-                            client_socket.sendall(maze.tostring(True, True).encode("utf-8"))
 
                             solution_received = client_socket.recv(4096).decode('utf-8', errors='ignore')
-                            print(f"RECEIVED>\n{solution_received}")
+                            print(f"RECEIVED>\n {solution_received}")
 
                             if solution_received.replace("\n", "") == maze.tostring(True, True).replace("\n", ""):
                                 client_socket.sendall(FLAG.encode('utf-8'))
@@ -79,4 +76,6 @@ def serve_maze(host=HOST, port=PORT):
 
 
 if __name__ == "__main__":
-    serve_maze()
+
+    maze = generate_maze(MAZE_WIDTH, MAZE_HEIGHT)
+    serve_maze(maze)
