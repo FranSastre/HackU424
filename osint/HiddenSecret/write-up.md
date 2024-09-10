@@ -41,7 +41,7 @@ https://github.com/JackTh3Hack/MyJSProjects/commit/9ca6777a208784e6430e69dd9c606
 After sometime the repo owner tweeted about the changes and how he had to fix it:
 [https://x.com/Jackth3Hack/status/1833465101136826418](https://x.com/Jackth3Hack/status/1833465101136826418)
 
-![Tweet with info of the mistake](tweet.png)
+![Tweet with info of the mistake](Tweet.png)
 
 If we look into the history of commits at the begining of August in the repo, we wil find the commit that removed the configuration file containing the DB password.
 
