@@ -6,7 +6,7 @@ Geogessr
 
 ## Dificulty
 
-Medium
+Easy
 
 ## Challenge Description
 
