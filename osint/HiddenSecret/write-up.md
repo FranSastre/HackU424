@@ -12,6 +12,7 @@ Easy
 
 Dive into the depths of the codebase of our friend to uncover a hidden secret! This challenge will test your skills in tracking down a crucial piece of sensible information to connect to external services. Use your detective skills and follow the clues to find the secret. Happy hunting!.
 
+[https://github.com/JackTh3Hack/MyJSProjects](https://github.com/JackTh3Hack/MyJSProjects)
 
 ## Hints
 
