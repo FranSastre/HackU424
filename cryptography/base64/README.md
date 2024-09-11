@@ -1,21 +1,3 @@
-One last time: Encoding is not encryption. HACK4U{3nc0d1ng_1s_n0t_3ncrypt10n!!!!!!!}
-
-```
-Say it with me: Encoding is not encryption T25lIGxhc3QgdGltZTogRW5jb2RpbmcgaXMgbm90IGVuY3J5cHRpb24uIEhBQ0s0VXszbmMwZDFuZ18xc19uMHRfM25jcnlwdDEwbiEhISEhISF9
-```
-
-```
-Say it with me: Encoding is not encryption U2F5IGl0IHdpdGggbWU6IEVuY29kaW5nIGlzIG5vdCBlbmNyeXB0aW9uIFQyNWxJR3hoYzNRZ2RHbHRaVG9nUlc1amIyUnBibWNnYVhNZ2JtOTBJR1Z1WTNKNWNIUnBiMjR1SUVoQlEwczBWWHN6Ym1Nd1pERnVaMTh4YzE5dU1IUmZNMjVqY25sd2RERXdiaUVoSVNFaElTRjk=
-```
-
-```
-If this were encryption, you would need some kind of key or password to decrypt this U2F5IGl0IHdpdGggbWU6IEVuY29kaW5nIGlzIG5vdCBlbmNyeXB0aW9uIFUyRjVJR2wwSUhkcGRHZ2diV1U2SUVWdVkyOWthVzVuSUdseklHNXZkQ0JsYm1OeWVYQjBhVzl1SUZReU5XeEpSM2hvWXpOUloyUkhiSFJhVkc5blVsYzFhbUl5VW5CaWJXTm5ZVmhOWjJKdE9UQkpSMVoxV1ROS05XTklVbkJpTWpSMVNVVm9RbEV3Y3pCV1dITjZZbTFOZDFwRVJuVmFNVGg0WXpFNWRVMUlVbVpOTWpWcVkyNXNkMlJFUlhkaWFVVm9TVk5GYUVsVFJqaz0=
-```
-
-```
-SWYgdGhpcyB3ZXJlIGVuY3J5cHRpb24sIHlvdSB3b3VsZCBuZWVkIHNvbWUga2luZCBvZiBrZXkgb3IgcGFzc3dvcmQgdG8gZGVjcnlwdCB0aGlzIFUyRjVJR2wwSUhkcGRHZ2diV1U2SUVWdVkyOWthVzVuSUdseklHNXZkQ0JsYm1OeWVYQjBhVzl1SUZVeVJqVkpSMnd3U1Voa2NHUkhaMmRpVjFVMlNVVldkVmt5T1d0aFZ6VnVTVWRzZWtsSE5YWmtRMEpzWW0xT2VXVllRakJoVnpsMVNVWlJlVTVYZUVwU00yaHZXWHBPVWxveVVraGlTRkpoVmtjNWJsVnNZekZoYlVsNVZXNUNhV0pYVG01WlZtaE9XakpLZEU5VVFrcFNNVm94VjFST1MwNVhUa2xWYmtKcFRXcFNNVk5WVm05UmJFVjNZM3BDVjFkSVRqWlpiVEZPWkRGd1JWSnVWbUZOVkdnMFdYcEZOV1JWTVVsVmJWcE9UV3BXY1ZreU5YTmtNbEpGVWxoa2FXRlZWbTlUVms1R1lVVnNWRkpxYXowPQ==
-```
-
 # 🔐 Base64 Encoding Challenge - Learn the Difference!
 
 In this challenge, you'll be given multiple **Base64 encoded strings**. Your task is to decode them to reveal the hidden message. 🧐 But remember: **encoding is not encryption**!
