@@ -1,49 +1,100 @@
 # 🧩 CTF Maze Challenge
 
-This project contains two Python scripts: one for generating a maze in ASCII format and serving it over a TCP connection, and another for connecting to the server, receiving the maze, and automatically solving it.
+This project contains two main folders:
+
+1. **Challenges**: which contains a Dockerfile that deploys three scripts in separate containers, each one listening on a different port (9997, 9998, and 9999).
+2. **Solutions**: which contains three scripts to solve the three challenges.
 
 ## 📋 Requirements
 
-Before running the scripts, make sure you have Python installed on your system. You will also need to install the necessary dependencies using the `requirements.txt` file.
+Before running the scripts, ensure you have Docker installed on your system. You can also use Python if you prefer running the scripts from the **Solutions** folder directly.
 
 ## 🚀 Installation
 
-1. **Create a virtual environment (optional but recommended):**
+### Option 1: Use Docker for the Challenges
+
+1. **Navigate to the `Challenges` folder**:
 ```
-    python -m venv .venv
+cd Challenges
 ```
 
-2. **Activate the virtual environment:**
+2. **Build the Docker image**:
 ```
-    .venv\Scripts\activate
+docker build -t ctf-maze-challenges .
 ```
 
-3. **Install the required dependencies using pip:**
+3. **Run the container**:
+```
+docker run -d -p 9997:9997 -p 9998:9998 -p 9999:9999 ctf-maze-challenges
+```
+
+This will launch the three scripts, each listening on ports 9997, 9998, and 9999.
+
+### Option 2: Run the Scripts Manually
+
+1. **Navigate to the `Solutions` folder**:
+```
+cd Solutions
+```
+
+2. **Create a virtual environment (optional but recommended)**:
+```
+python -m venv .venv
+```
+
+3. **Activate the virtual environment**:
+   - On Windows:
+     ```
+     .venv\Scripts\activate
+     ```
+   - On Linux/MacOS:
+     ```
+     source .venv/bin/activate
+     ```
+
+4. **Install the required dependencies**:
 ```
 pip install -r requirements.txt
 ```
 
 ## 🛠️ Usage
-1. Generate and Serve the Maze  
-This script generates a random maze using the mazelib library and serves it over a TCP connection.
 
-Run the following command to start the server:
-```
-python maze_generator.py
-```
-The server will listen on `0.0.0.0` and port `9999` by default. You can change these values by editing the script.
+### 1. Deploy the challenges from the `Challenges` folder
+Each challenge script is deployed on a specific port:
 
-2. Solve the Maze   
-This script connects to the maze server, receives the maze in ASCII format, and solves it using `mazelib`.
+- Challenge 1: `0.0.0.0:9997`
+- Challenge 2: `0.0.0.0:9998`
+- Challenge 3: `0.0.0.0:9999`
 
-Run the following command to solve the maze:
+### 2. Solve the challenges from the `Solutions` folder
+
+Each solution script in the **Solutions** folder is designed to connect to its respective challenge and automatically solve it.
+
+#### Solve Challenge 1:
 ```
-python maze_solver.py
+python maze_challenge1_solution.py
 ```
-This script will connect to the server at localhost:9999 by default. You can modify the host and port as needed by editing the script.
+
+This script will connect to port `9997` by default.
+
+#### Solve Challenge 2:
+```
+python maze_challenge2_solution.py
+```
+
+This script will connect to port `9998` by default.
+
+#### Solve Challenge 3:
+```
+python maze_challenge3_solution.py
+```
+
+This script will connect to port `9999` by default.
+
+You can modify the scripts to change the IP address or port if necessary.
 
 ## 🔧 Notes
-You can customize the size of the maze and other parameters by modifying the corresponding scripts.  
+- Make sure the challenge containers are running before attempting to solve them.
+- You can modify the scripts to adjust specific challenge parameters.
 
-Make sure the maze server is running before executing the solve script.
-Enjoy solving the maze in this CTF challenge! 🧠
+Have fun solving these challenges in the CTF! 🧠
