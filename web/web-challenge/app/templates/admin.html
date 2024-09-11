@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% set active_page = "admin" %}
+
+{% block content %}
+
+{% if not is_admin %}
+
+<h1>What are you doing here?</h1>
+<p class="lead">You are not an admin!!</p>
+
+{% endif %}
+
+{% if is_admin %}
+
+<h1>Hello admin_name !</h1> 
+
+<h2>Welcome to the most secure Admin Panel!</h2>
+
+<p class="lead">Where you looking for this?</p>
+<p>HACK4U{B_C@R3FVL_W1T#_3NC0DED_CO00KIEZZ!}</p>
+
+{% endif %}
+
+{% endblock %}
