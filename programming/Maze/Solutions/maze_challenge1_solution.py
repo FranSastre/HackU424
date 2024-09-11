@@ -1,6 +1,6 @@
 import socket
 
-def send_test_message(message, server_host='127.0.0.1', server_port=9997):
+def send_test_message(message, server_host='4.175.193.106', server_port=9997):
     """Envía un mensaje de prueba al servidor."""
     try:
         # Crear un socket TCP/IP

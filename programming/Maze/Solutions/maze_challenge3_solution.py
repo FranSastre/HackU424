@@ -3,7 +3,7 @@ import numpy as np
 from mazelib import Maze
 from mazelib.solve.BacktrackingSolver import BacktrackingSolver
 
-def send_test_message(server_host='127.0.0.1', server_port=9999):
+def send_test_message(server_host='4.175.193.106', server_port=9999):
     """Envía un mensaje de prueba al servidor."""
     try:
         # Crear un socket TCP/IP
