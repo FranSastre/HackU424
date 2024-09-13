@@ -14,6 +14,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY app /app
 
 COPY init.sh /
+RUN chmod +x /init.sh
 
 EXPOSE 6002
 

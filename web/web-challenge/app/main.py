@@ -34,7 +34,7 @@ def post_login():
     password = request.form.get('password')
     if password is None: abort(400)
 
-    if username == "R4sp0wn" and password == "Cr3dzz":
+    if username == "Blade3742" and password == "xt7It":
         login_cookie = base64.b64encode(bytes(f"{username};regular_user", 'utf-8')).decode('utf8')
         response = redirect("/login")
         response.set_cookie("login_cookie", login_cookie)

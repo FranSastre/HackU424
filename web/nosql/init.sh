@@ -1,9 +1,9 @@
 #!/bin/bash
 
-/usr/bin/mongod --fork --logpath /var/log/mongodb.log --bind_ip_all
+/usr/bin/mongod --fork --logpath /var/log/mongodb.log
 
 echo "Waiting for MongoDB to start..."
-until mongosh --eval 'print("Waiting for connection")'
+until mongosh --eval 'db.adminCommand("ping")' | grep -q '"ok" : 1'
 do
     sleep 1
 done
