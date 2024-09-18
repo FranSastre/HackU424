@@ -49,4 +49,4 @@ If we look into the history of commits at the begining of August in the repo, we
 
 ## Flag
 
-HACKU24{JackHackMySQL2024!}
+HACK4U{JackHackMySQL2024!}
